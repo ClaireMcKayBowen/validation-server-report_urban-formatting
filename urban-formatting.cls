@@ -55,7 +55,7 @@
 % Absolute positioning of images (e.g., title page footer image)
 \RequirePackage[absolute]{textpos}
 % Chicago Reference
-\RequirePackage[authordate, backend = biber, isbn = false]{biblatex-chicago}
+\RequirePackage[authordate, autocite = inline, backend = biber, isbn = false, natbib]{biblatex-chicago}
 
 % Urban Colors -----------------------------------
 \definecolor{urban-cyan}{HTML}{00aeef}
@@ -315,9 +315,6 @@
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Notes and References %%%%%%%%%%%%%%%%%%%%%%%%%%
-% Notes Title Formatting
-\renewcommand\notesname{\color{urban-blue}\fontsize{28}{12}\selectfont Notes}
-
 % Endnote font size
 \renewcommand\enotesize{\fontsize{9}{9}\selectfont}
 
@@ -325,9 +322,6 @@
 \renewcommand\enoteformat{%
    \noindent\theenmark\hspace{0.1in}\ \hangindent 0.85\parindent%
 }
-
-% Reference Title Formatting
-\renewcommand\refname{\color{urban-blue}\fontsize{28}{18}\selectfont References}
 
 % Reference font formatting
 \renewcommand*{\bibfont}{\fontsize{9}{9}\selectfont}
