@@ -16,30 +16,30 @@
 
 Federal tax data, derived from individuals' and businesses' tax and information returns, are invaluable resources for research on a range of topics. That research improves our understanding of individuals' and firms' responses to economic incentives. Researchers can also use the data to study areas far outside of taxation. For example, \citet{chetty2014measuring} have used tax data to study economic mobility across generations and how elementary school teacher quality affects economic outcomes later in life \citep{chetty2011does}.
 
-However, full access to these data is only available to select government agencies, a very limited number of researchers working in collaboration with analysts in those agencies, or through highly selective programs within the Internal Revenue Service (IRS) Statistics of Income (SOI) Division. In addition, the existing process of manually vetting each statistical release for disclosure risks is labor-intensive and imperfect since it relies on subjective human review. The tremendous demand to participate in such projects, which is limited by SOI resource constraints, indicates that much more high-quality research could be conducted if a safe and less resource-intensive method were developed to expand access.
+However, full access to these data is available only to select government agencies, to a very limited number of researchers working in collaboration with analysts in those agencies, or through highly selective programs within the Internal Revenue Service (IRS) Statistics of Income (SOI) Division. In addition, the existing process of manually vetting each statistical release for disclosure risks is labor intensive and imperfect because it relies on subjective human review. The tremendous demand to participate in such projects, which is limited by SOI resource constraints, indicates that much more high-quality research could be conducted if a safe and less resource-intensive method were developed to expand access.
 
 \subsection{Background on Accessing Confidential Data}\label{subsec:background}
-At the IRS, the current process to release analytic results on the confidential datasets requires the researcher to undergo an extensive background check (IRS clearance) to access the data and then an IRS staff member to review any results the researcher wants to release. This process reflects the norm for researchers wishing to access federal confidential data. Either researchers gain access from a public use file that is an altered version of the confidential data or has direct access to the confidential data.
+At the IRS, the current process to release analytic results on confidential datasets requires the researcher to undergo an extensive background check (IRS clearance) to access the data, and then an IRS staff member must review any results the researcher wants to release. This process reflects the norm for researchers wishing to access federal confidential data. Either researchers gain access from a public use file that is an altered version of the confidential data or has direct access to the confidential data.
 
-As a potential middle ground between the two extremes, the U.S. Census Bureau provides research access to two experimental synthetic databases via the Synthetic Data Server (SDS) at Cornell University: the Synthetic Longitudinal Business Database and the SIPP Synthetic Beta Data Product \citep{benedetto2013creation,drechsler2014synthetic}. The SDS provides a validation server that allows researchers to submit their statistical programs to run on the underlying administrative data after testing it on the publicly available synthetic data.
+As a potential middle ground between the two extremes, the US Census Bureau provides research access to two experimental synthetic databases via the Synthetic Data Server (SDS) at Cornell University: the Synthetic Longitudinal Business Database and the SIPP Synthetic Beta Data Product \citep{benedetto2013creation,drechsler2014synthetic}. The SDS provides a validation server that allows researchers to submit their statistical programs to run on the underlying administrative data after testing it on the publicly available synthetic data.
 
-However, the SDS has two disadvantages. First, because it is not automated, the process consumes limited staff time, and the demand often exceeds the available staff time. This situation causes long delays for approval. Second, reviews may be inconsistent because they are manually evaluated by humans, and they do not adhere to formal notions of privacy that constrain the allowable output.
+However, the SDS has two disadvantages. First, because it is not automated, the process consumes limited staff time, which demand often exceeds. This situation causes long delays for approval. Second, reviews may be inconsistent because they are manually evaluated by humans and not adhere to formal notions of privacy that constrain the allowable output.
 
-To address these problems, privacy researchers propose implementing a newer privacy loss definition, differential privacy (DP), as a means to automate the process \citet{dwork2006calibrating}. DP emerged from the computer science community as a rigorous definition for privacy loss associated with data publishing. Since then, many data privacy experts regard DP as the ``gold standard'' for privacy protection. It is often called a \textit{formally private} method because statisticians can mathematically prove the privacy loss that will result from a data publication that uses differentially private methods.
+To address these problems, privacy researchers propose implementing a newer privacy loss definition, differential privacy (DP), as a means to automate the process \citep{dwork2006calibrating}. DP emerged from the computer science community as a rigorous definition for privacy loss associated with data publishing. Since then, many data privacy experts regard DP as the ``gold standard'' for privacy protection. It is often called a \textit{formally private} method because statisticians can mathematically prove the privacy loss that will result from a data publication that uses differentially private methods.
 
-DP contrasts to prior statistical disclosure control or limitation methods, because it does not require a simulated attacker or the same strong assumptions concerning how much information an intruder may have or what kind of disclosure is likely to occur. This does not imply that DP protects from all attacks, but, for a defined type of privacy loss, it offers provable amounts of protection.
+DP differs from prior statistical disclosure control or limitation methods because it does not require a simulated attacker or the same strong assumptions concerning how much information an intruder may have or what kind of disclosure is likely to occur. This does not imply that DP protects from all attacks, but, for a defined type of privacy loss, it offers provable amounts of protection.
 
-At a high level, DP links the potential for privacy loss to how much the answer of a query (such as a statistic) is changed given the absence or presence of the most extreme possible person or observation in the data population. DP requires that the level of protection is set proportionally to this maximum potential change, thereby providing formal privacy protections scaled to the worst-case scenario. For further details, Dwork and Roth provides a rigorous mathematical review of DP \citep{dwork2014algorithmic}. \citet{bowen2021philosophy} covers the basics of DP and its challenges for adoption geared towards a general, mathematical audience, whereas \citet{nissim2017differential} and \citet{snoke2019differential} describe DP for a non-technical, general audience. 
+At a high level, DP links the potential for privacy loss to how much the answer of a query (such as a statistic) is changed given the absence or presence of the most extreme possible person or observation in the data population. DP requires that the level of protection is set proportionally to this maximum potential change, thereby providing formal privacy protections scaled to the worst-case scenario. For further details, \citet{dwork2014algorithmic} provides a rigorous mathematical review of DP. \citet{bowen2021philosophy} covers the basics of DP and its challenges for adoption geared towards a general, mathematical audience, whereas \citet{nissim2017differential} and \citet{snoke2019differential} describe DP for a non-technical, general audience. 
 
-In this report, we examine the feasibility of differentially private methods for our target analyses and more complex ones. Specifically, we highlight the general findings from our extensive feasibility study on several differentially private methods for releasing tabular statistics, mean and quantile statistics, and regression analyses \citep{barrientos2021}. Based on informal interviews and our tax expert collaborators, we identified these analyses as the priority analyses over others for the first stage of the validation server. There are several other analyses, such as model selection, that have been identified as important but will be explored for later development stages of the validation server. Further, we outline the methodological and practical challenges for implementing differential privacy on more complex analyses such as regression discontinuity design.
+In this report, we examine the feasibility of differentially private methods for our target analyses and more complex ones. Specifically, we highlight the general findings from our extensive feasibility study on several differentially private methods for releasing tabular statistics, mean and quantile statistics, and regression analyses \citep{barrientos2021}. Based on informal interviews and our tax expert collaborators, we identified these analyses as the priority analyses over others for the first stage of the validation server. There are several other analyses, such as model selection, that have been identified as important but will be explored for later development stages of the validation server. Further, we outline the methodological and practical challenges for implementing differential privacy on more complex analyses, such as regression discontinuity design.
 
 \subsection{Background on Differential Privacy}\label{subsec:dp}
-Differential privacy (DP) offers a provable and quantifiable amount of privacy protection, colloquially referred to as the privacy loss budget. Those in the data privacy and confidentiality community should note the important distinction that DP provides a statement about the algorithm (or mechanism), and not the data--a common misconception. In other words, DP requires that the \textit{mechanism} or \textit{algorithm} produces an output that provably meets the definitions. We refer to these methods as differentially private algorithms or mechanisms.
+Differential privacy offers a provable and quantifiable amount of privacy protection, colloquially referred to as the privacy loss budget. Those in the data privacy and confidentiality community should note the important distinction that DP provides a statement about the algorithm (or mechanism), not the data---a common misconception. In other words, DP requires that the \textit{mechanism} or \textit{algorithm} produces an output that provably meets the definitions. We refer to these methods as differentially private algorithms or mechanisms.
 
 In this section, we reproduce the pertinent definitions and theorems of DP with the following notation: $X\in\mathbb{R}$ is the original data set  with dimension ${n\times r}$ and $X^*$ is the private version of $X$ with dimension ${n^*\times r}$. We also define a statistical query as a function $u:\mathbb{R}^{n\times r}\rightarrow\mathbb{R}^k$, where the function maps the possible data sets of $X$ to $k$ real numbers.
 
 \subsubsection{Definitions and Theorems}\label{subsec:def}
-\begin{defn}\label{def:dp} \textbf{Differential Privacy} \citep{dwork2006calibrating}:
+\begin{defn}\label{def:dp} \textbf{Differential privacy} \citep{dwork2006calibrating}:
 A sanitization algorithm, $\M$, satisfies $\epsilon$-DP if for all subsets $S\subseteq Range(\M)$ and for all $X,X'$ such that $d(X,X')=1$, 
     \begin{equation}\label{eqn:dp}
         \frac{\Pr(\M( X) \in S)}{ \Pr(\M( X')\in S)}\le \exp(\epsilon)
@@ -47,11 +47,11 @@ A sanitization algorithm, $\M$, satisfies $\epsilon$-DP if for all subsets $S\su
 \end{defn}
 \noindent where $\epsilon>0$ is the privacy loss budget and $d(X,X')=1$ represents the possible ways that $X'$ differs from $X$ by one record.
 
-Privacy researchers debate on what this difference means. One interpretation is the presence or absence of a record while the other has the difference as a change, where $X$ and $X'$ have the same dimensions. \citet{li2016differential} refers to these interpretations as \textit{unbounded DP} for addition or removal of a record and \textit{bounded DP} for the change of a record. They prove that unbounded DP satisfies an important composition theorem we will discuss later in this section (see Theorem \ref{thm:comp}), whereas bounded DP does not. Since many differentially private methods rely on Theorem \ref{thm:comp}, we use unbounded DP in our paper.
+Privacy researchers debate what this difference means. One interpretation is the presence or absence of a record, and the other has the difference as a change, where $X$ and $X'$ have the same dimensions. \citet{li2016differential} refers to these interpretations as \textit{unbounded DP} for addition or removal of a record and \textit{bounded DP} for the change of a record. They prove that unbounded DP satisfies an important composition theorem we will discuss later in this section (see theorem \ref{thm:comp}), whereas bounded DP does not. Because many differentially private methods rely on theorem \ref{thm:comp}, we use unbounded DP in our report.
 
-Data users often criticize that $\epsilon$-DP algorithms inject too much noise into query results. Several relaxations of $\epsilon$-DP have been developed such as approximate DP \citep{dwork2006our}, probabilistic DP \citep{machanavajjhala2008privacy}, concentrated DP \citep{dwork2016concentrated}, R\'enyi differential privacy \citep{mironov2017renyi}, and zero-concentrated DP \citep{bun2016concentrated}. While these definitions are still formally private, they offer slightly weaker privacy guarantees. In return, they typically lessen the amount of noise required. We will cover approximate DP, also known as $(\epsilon, \delta)$-DP, R\'enyi differential privacy, and zero-concentrated in-depth, because the methods we test in our study use these definitions.
+Data users often criticize that $\epsilon$-DP algorithms inject too much noise into query results. Several relaxations of $\epsilon$-DP have been developed, such as approximate DP \citep{dwork2006our}, probabilistic DP \citep{machanavajjhala2008privacy}, concentrated DP \citep{dwork2016concentrated}, R\'enyi differential privacy \citep{mironov2017renyi}, and zero-concentrated DP \citep{bun2016concentrated}. Though these definitions are still formally private, they offer slightly weaker privacy guarantees. In return, they typically lessen the amount of noise required. We will cover approximate DP, also known as $(\epsilon, \delta)$-DP, R\'enyi differential privacy, and zero-concentrated in depth, because the methods we test in our study use these definitions.
 
-\begin{defn}\label{def:adp} \textbf{$(\epsilon, \delta)$-Differential Privacy} \citep{dwork2006our}:
+\begin{defn}\label{def:adp} \textbf{$(\epsilon, \delta)$-Differential privacy} \citep{dwork2006our}:
 A sanitization algorithm, $\M$, satisfies $(\epsilon, \delta)$-DP if for all $X, X'$ that are $d(X,X')=1$,
     \begin{equation}\label{eqn:adp}
         \Pr(\M( X) \in S)\le \exp(\epsilon) \Pr(\M( X')\in S) + \delta
@@ -59,11 +59,11 @@ A sanitization algorithm, $\M$, satisfies $(\epsilon, \delta)$-DP if for all $X,
     where $\delta\in [0,1]$. $\epsilon$-DP is a special case of $(\epsilon, \delta)$-DP when $\delta=0$.
 \end{defn}
 
-The parameter $\delta$ adds a small probability that the bound given in Definition \ref{def:dp} does not hold, which can be useful when dealing with extreme yet very unlikely cases.
+The parameter $\delta$ adds a small probability that the bound given in definition \ref{def:dp} does not hold, which can be useful when dealing with extreme yet very unlikely cases.
 
-In 2016, \citet{dwork2016concentrated} created concentrated DP (CDP), which aimed to reduce the privacy loss over multiple computations (more on composition of multiple queries soon when discussing Theorem \ref{thm:comp}).
+In 2016, \citet{dwork2016concentrated} created concentrated DP (CDP), which aimed to reduce the privacy loss over multiple computations (more on composition of multiple queries soon when discussing theorem \ref{thm:comp}).
 
-\begin{defn}\label{def:cdp} \textbf{Concentrated Differential Privacy} \citep{dwork2016concentrated}:
+\begin{defn}\label{def:cdp} \textbf{Concentrated differential privacy} \citep{dwork2016concentrated}:
 For all data sets $(\x,\x')$ that is $d(\x,\x')=1$, a sanitization algorithm $\R$ gives $(\mu, \tau)$-concentrated differential privacy if 
 \begin{equation}
     D_{\text{subG}}(\R(\x)||\R(\x')) \preceq (\mu,\tau),
@@ -73,24 +73,24 @@ where $D_{\text{subG}}$ stands for \emph{subGaussian divergence}. SubGaussian di
 
 \citet{bun2016concentrated} improved concentrated DP with zero-concentrated DP (zCDP).
 
-\begin{defn}\label{def:scdp} \textbf{Zero-Concentrated Differential Privacy} \citep{bun2016concentrated}:
+\begin{defn}\label{def:scdp} \textbf{Zero-concentrated differential privacy} \citep{bun2016concentrated}:
 A sanitization algorithm, $\M$, satisfies $(\xi, \rho)$-zero-concentrated differential privacy if for all $X, X'$ that are $d(X,X')=1$ and $\alpha\in (1, \infty)$,
     \begin{equation}
         D_\alpha(M(X)||\M(X')\leq\xi+\rho\alpha,
     \end{equation}
-    where $D_\alpha(M(X)||\M(X')$ is the $\alpha$-R\'enyi divergence (see Definition \ref{def:divergence}) between the distribution of $M(X)$ and the distribution of $M(X').$
+    where $D_\alpha(M(X)||\M(X')$ is the $\alpha$-R\'enyi divergence (see definition \ref{def:divergence}) between the distribution of $M(X)$ and the distribution of $M(X').$
 \end{defn}
-\citet{bun2016concentrated} defines $\rho$-zCDP to be $(0,\rho)$-zCDP. They also show in Proposition 1.3 that if $M$ satisfies $\rho$-zCDP, then $M$ is $(\rho+2\sqrt{\rho\log(1/\delta)},\delta)$-DP for any $\delta>0$. For the other direction, their Proposition 1.4 states that if $M$ satisfies $\epsilon$-DP, then $M$ satisfies $(1/2\epsilon^2)$-zCDP.
+\citet{bun2016concentrated} define $\rho$-zCDP to be $(0,\rho)$-zCDP. They also show in proposition 1.3 that if $M$ satisfies $\rho$-zCDP, then $M$ is $(\rho+2\sqrt{\rho\log(1/\delta)},\delta)$-DP for any $\delta>0$. For the other direction, their proposition 1.4 states that if $M$ satisfies $\epsilon$-DP, then $M$ satisfies $(1/2\epsilon^2)$-zCDP.
 
-The next year, \citet{mironov2017renyi} also introduced the idea of DP based on the concept of R\'enyi divergence. The paper defines R\'enyi Divergence (Definition \ref{def:divergence}) and R\'enyi DP (Definition \ref{def:renyi}) as follows:
+The next year, \citet{mironov2017renyi} introduced the idea of DP based on the concept of R\'enyi divergence. The paper defines R\'enyi divergence (definition \ref{def:divergence}) and R\'enyi DP (definition \ref{def:renyi}) as follows:
 
-\begin{defn}\label{def:divergence} \textbf{R\'enyi Divergence} \citep{renyi1961measures}: Let $P$ and $Q$ be two distributions on $X$ defined over the same probability space, and let $p$ and $q$ be their respective densities. The R\'enyi divergence of a finite order $\alpha\neq1$ between $P$ and $Q$ is defined as
+\begin{defn}\label{def:divergence} \textbf{R\'enyi divergence} \citep{renyi1961measures}: Let $P$ and $Q$ be two distributions on $X$ defined over the same probability space, and let $p$ and $q$ be their respective densities. The R\'enyi divergence of a finite order $\alpha\neq1$ between $P$ and $Q$ is defined as
     \begin{equation}
         D_\alpha(P||Q)\stackrel{\Delta}{=}\frac{1}{\alpha-1}\ln\int_X q(x)\left(\frac{p(x)}{q(x)}\right)^\alpha dx
     \end{equation}
 \end{defn}
 
-\begin{defn}\label{def:renyi} \textbf{$(\alpha, \epsilon)$-Differential Privacy} \citep{mironov2017renyi}: A sanitization algorithm, $\M$, satisfies $(\alpha, \epsilon)$-DP if for all $X, X'$ that are $d(X,X')=1$,
+\begin{defn}\label{def:renyi} \textbf{$(\alpha, \epsilon)$-Differential privacy} \citep{mironov2017renyi}: A sanitization algorithm, $\M$, satisfies $(\alpha, \epsilon)$-DP if for all $X, X'$ that are $d(X,X')=1$,
     \begin{equation}
         D_\alpha(M(X)||\M(X')\leq\epsilon
     \end{equation}
@@ -100,12 +100,12 @@ Additionally, \citet{mironov2017renyi} showed that if $\M$ satisfies $(\alpha,\e
 
 Many DP algorithms require repeated responses from a query system, such as a validation server. Each time a statistic or output is released, data information ``leaks'' and must be protected. DP protects the information by splitting the amount of $\epsilon$ used for each output, and the composition theorems formalize this concept.
 
-\begin{thm}\label{thm:comp} \textbf{Composition Theorems} \citep{mcsherry2009privacy,dwork2016concentrated,bun2016concentrated}:
+\begin{thm}\label{thm:comp} \textbf{Composition theorems} \citep{mcsherry2009privacy,dwork2016concentrated,bun2016concentrated}:
 Suppose a mechanism, $\M$, provides $(\epsilon_j$, $\delta_j)$-DP for $j=1,\ldots,k$.
   \begin{itemize}\setlength{\itemindent}{15pt}
-  \item[a)] \textbf{Sequential Composition:}\\
+  \item[a)] \textbf{Sequential composition:}\\
     The sequence of $\M_j(X)$ applied on the same $X$ provides $(\sum_j\epsilon_j,\sum_j\delta_j)$-DP or $(\sum_j\xi_j,\sum_j\rho_j)$-zCDP.
-  \item[b)] \textbf{Parallel Composition:}\\
+  \item[b)] \textbf{Parallel composition:}\\
     Let  $D_j$ be disjoint subsets of the input domain $D$. The sequence of $\M_j(X\cap D_j)$ provides $\max(\epsilon_j), \max(\delta_j)$-DP or $\max(\xi_j), \max(\rho_j)$-zCDP.
   \end{itemize}
 \end{thm}
