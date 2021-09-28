@@ -56,10 +56,17 @@
 \RequirePackage[absolute]{textpos}
 % Chicago Reference
 \RequirePackage[authordate, autocite = inline, backend = biber, isbn = false, natbib]{biblatex-chicago}
+% Colored URL
+\usepackage[colorlinks = true,
+            linkcolor = black,
+            urlcolor  = urban-url,
+            citecolor = black,
+            anchorcolor = black]{hyperref}
 
 % Urban Colors -----------------------------------
 \definecolor{urban-cyan}{HTML}{00aeef}
 \definecolor{urban-blue}{HTML}{1696d2}
+\definecolor{urban-url}{HTML}{0a4c6a}
 \definecolor{urban-gold}{HTML}{ffb918}
 \definecolor{urban-gray}{HTML}{9d9fa2}
 \definecolor{urban-darkgray}{HTML}{5c5859}
@@ -278,7 +285,6 @@
     {%
         \fontsize{11.5}{0}%
         \selectfont%
-        \noindent%
         \textbf{#1}%
     }%
 }%
@@ -328,3 +334,6 @@
 
 % Hanging indent
 \setlength{\bibhang}{0.15in}
+
+% Changing et al
+\DefineBibliographyStrings{english}{andothers={and colleagues}}
