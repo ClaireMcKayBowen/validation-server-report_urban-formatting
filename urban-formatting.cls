@@ -62,6 +62,8 @@
             urlcolor  = urban-url,
             citecolor = black,
             anchorcolor = black]{hyperref}
+% Alignment           
+\usepackage[document]{ragged2e}
 
 % Urban Colors -----------------------------------
 \definecolor{urban-cyan}{HTML}{00aeef}
@@ -250,7 +252,7 @@
     \fontsize{7.5}{7.5}%
     \selectfont%
     \noindent%
-    \MakeUppercase{#1}%
+    \textbf{\MakeUppercase{#1}}%
 }%
 
 % Date Formatting
@@ -267,7 +269,7 @@
         \fontseries{b}%
         \selectfont%
         \noindent
-        \textcolor{urban-blue}{\MakeUppercase{\so{#1}}}%
+        \textcolor{urban-blue}{\MakeUppercase{#1}}%
     }%
 }%
 
