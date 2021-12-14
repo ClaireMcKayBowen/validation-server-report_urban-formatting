@@ -40,9 +40,9 @@
     multicol, % Create Multi-columns
     multirow, % Create Multi-rows
     pdfpages, % Insert pdfs
+    ragged2e, % Alignment 
     scrextend, % Adding margin
     setspace, % Line Spacing
-    soul, % Letter Spacing
     subcaption, % Figure/Table Subaption Formatting
     tabularx, % Table Management
     titlesec, % Change Formatting
@@ -62,8 +62,8 @@
             urlcolor  = urban-url,
             citecolor = black,
             anchorcolor = black]{hyperref}
-% Alignment           
-\usepackage[document]{ragged2e}
+% Letter spacing
+\usepackage[letterspace=1pt]{microtype}
 
 % Urban Colors -----------------------------------
 \definecolor{urban-cyan}{HTML}{00aeef}
@@ -112,7 +112,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TOC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title Formatting
-\renewcommand{\cfttoctitlefont}{\color{urban-blue}\fontsize{28}{0}\selectfont}
+\renewcommand{\cfttoctitlefont}{\color{urban-blue}\fontsize{28}{0}\selectfont\raggedright}
 
 % Font Style
 \renewcommand{\cftsecfont}{\fontsize{11}{0}\selectfont}
@@ -129,6 +129,10 @@
 \setlength{\cftbeforepartskip}{16pt}
 \setlength{\cftbeforesecskip}{8pt}
 \setlength{\cftbeforesubsecskip}{8pt}
+
+\renewcommand\cftpartafterpnum{\vskip-4pt}
+\renewcommand\cftsecafterpnum{\vskip-4pt}
+\renewcommand\cftsubsecafterpnum{\vskip-4pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bullets %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Spacing between bullet and text
@@ -181,23 +185,23 @@
 \def\normalsize{\fontsize{10}{12}}% 18 to 12 (divide by 1.5 spacing)
 \def\enotesize{\fontsize{9}{9}}
 
-% Part Formatting
-\titleformat{\part}[display]{\color{urban-blue}}{\thepart}{}{\fontsize{28}{21}\selectfont}% 32 to 21 (divide by 1.5 spacing)
+% Part Formatting - H1
+\titleformat{\part}[display]{\color{urban-blue}}{\thepart}{}{\fontsize{28}{24}\selectfont\raggedright}% 36 to 26 (divide by 1.5 spacing)
 \titlespacing*{\part}{0pt}{-28pt}{0pt}%
 
-% Section Formatting
-\titleformat{\section}[display]{}{}{}{\fontsize{18}{16}\selectfont}% 24 to 16 (divide by 1.5 spacing)
+% Section Formatting - H2
+\titleformat{\section}[display]{}{}{}{\fontsize{18}{16}\selectfont\raggedright}% 24 to 16 (divide by 1.5 spacing)
 \titlespacing*{\section}{0pt}{21pt}{4pt}% 32 to 21, 6 to 4 (divide by 1.5 spacing)
 
-% Subsection Formatting
-\titleformat{\subsection}[display]{\bfseries}{}{}{\fontsize{12}{18}\selectfont}%
-\titlespacing*{\subsection}{0pt}{12pt}{4pt}% 18 to 12, 6 to 4 (divide by 1.5 spacing)
+% Subsection Formatting - H3
+\titleformat{\subsection}[display]{\bfseries}{}{}{\fontsize{12}{18}\selectfont\raggedright}%
+\titlespacing*{\subsection}{0pt}{12pt}{-2pt}% 18 to 12, 6 to -2 (divide by 1.5 spacing)
 
-% Subsubsection Formatting
-\titleformat{\subsubsection}[display]{\bfseries\color{urban-gray}}{}{0em}{\fontsize{10}{12}\selectfont\MakeUppercase}% 18 to 12, 6 to 4 (divide by 1.5 spacing)
-\titlespacing*{\subsubsection}{0pt}{8pt}{0pt}% 12 to 8 (divide by 1.5 spacing)
+% Subsubsection Formatting - H4
+\titleformat{\subsubsection}[display]{\bfseries\color{urban-gray}}{}{0em}{\fontsize{10}{12}\selectfont\MakeUppercase\raggedright}% 18 to 12, 6 to 4 (divide by 1.5 spacing)
+\titlespacing*{\subsubsection}{0pt}{8pt}{-8pt}% 12 to 8 (divide by 1.5 spacing), no spacing afterward
 
-% fourthsub Formatting
+% fourthsub Formatting  - H5
 \newcommand\fourthsub[1]{%
     {%
         \fontsize{10}{0}%
@@ -211,30 +215,34 @@
 \newcommand\policycenter[1]{%
     {%
         \fontsize{8}{0}%
-        \fontseries{eb}%
+        \fontseries{b}%
         \selectfont%
         \noindent%
-        \textcolor{urban-darkgray}{\MakeUppercase{\so{#1}}}%
+        \textcolor{urban-darkgray}{\MakeUppercase{#1}}%
     }%
 }%
 
 % Title Report Formatting
 \newcommand\titlereport[1]{%
     {%
-        \fontsize{30}{38}%
+    \begin{doublespace}%
+        \fontsize{30pt}{38pt}%
         \fontseries{l}%
+        \linespread{1}%
         \selectfont%
         \noindent#1%
+    \end{doublespace}%
     }%
 }%
 
 % Report Subtitle Formatting
 \newcommand\reportsubtitle[1]{%
     {%
-        \fontsize{14}{18}%
+        \fontsize{14}{18pt}%
         \fontseries{b}%
+        \linespread{1}%
         \selectfont%
-        \noindent
+        \noindent%
         \textcolor{urban-blue}{#1}%
     }%
 }%
@@ -252,7 +260,7 @@
     \fontsize{7.5}{7.5}%
     \selectfont%
     \noindent%
-    \textbf{\MakeUppercase{#1}}%
+    \textbf{\MakeUppercase{\textls{#1}}}%
 }%
 
 % Date Formatting
@@ -269,7 +277,7 @@
         \fontseries{b}%
         \selectfont%
         \noindent
-        \textcolor{urban-blue}{\MakeUppercase{#1}}%
+        \textcolor{urban-blue}{\MakeUppercase{\textls{#1}}}%
     }%
 }%
 
@@ -328,11 +336,11 @@
 
 % Mark with no indent and hanging indent
 \renewcommand\enoteformat{%
-   \noindent\theenmark\hspace{0.1in}\ \hangindent 0.85\parindent%
+   \noindent$^\theenmark$\hspace{0.05in}\ \hangindent 0.55\parindent%
 }
 
 % Reference font formatting
-\renewcommand*{\bibfont}{\fontsize{9}{9}\selectfont}
+\renewcommand*{\bibfont}{\fontsize{9}{8.9}\selectfont}
 
 % Hanging indent
 \setlength{\bibhang}{0.15in}

@@ -4,15 +4,12 @@
 
 \fancyfoot{}
 
-\fancyfoot[LE]{\colorbox{urban-footergray}{\makebox(0.2, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{}\hspace{0.2in}}}}\colorbox{urban-gold}{\makebox(0.2, 0.12)[c]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase\thepage}}}\colorbox{urban-footergray}{\makebox(5.64, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{\so{\THETITLE}}\hspace{0.2in}}}}}
+\fancyfoot[LE]{\colorbox{urban-footergray}{\makebox(0.2, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{}\hspace{0.2in}}}}\colorbox{urban-gold}{\makebox(0.2, 0.12)[c]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase\thepage}}}\colorbox{urban-footergray}{\makebox(5.64, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{\textls{\THETITLE}}\hspace{0.2in}}}}}
 
-\fancyfoot[RO]{\colorbox{urban-footergray}{\makebox(5.64, 0.12)[l]{\fontsize{7.5}{0}\selectfont\bfseries{\hspace{0.2in}\MakeUppercase{\so{\THETITLE}}}}}\colorbox{urban-gold}{\makebox(0.2, 0.12)[c]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase\thepage}}}\colorbox{urban-footergray}{\makebox(0.2, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{}\hspace{0.2in}}}}}
+\fancyfoot[RO]{\colorbox{urban-footergray}{\makebox(5.64, 0.12)[l]{\fontsize{7.5}{0}\selectfont\bfseries{\hspace{0.2in}\MakeUppercase{\textls{\THETITLE}}}}}\colorbox{urban-gold}{\makebox(0.2, 0.12)[c]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase\thepage}}}\colorbox{urban-footergray}{\makebox(0.2, 0.12)[r]{\fontsize{7.5}{0}\selectfont\bfseries{\MakeUppercase{}\hspace{0.2in}}}}}
 % Footer Formatting: DO NOT CHANGE -----------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Report %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{FlushLeft}
-    \part{Differentially Private Methods for Validation Servers}
-\end{FlushLeft}
-
+\part{Differentially Private Methods for Validation Servers}
 \section{Introduction}\label{sec:intro}
 
 Federal tax data, derived from individuals' and businesses' tax and information returns, are invaluable resources for research on a range of topics. That research improves our understanding of individuals' and firms' responses to economic incentives. Researchers can also use these data to study areas far removed from taxation. For example, \citet{chetty2014measuring} have used tax data to study economic mobility across generations and how elementary school teacher quality affects economic outcomes later in life \citep{chetty2011does}.
@@ -40,134 +37,101 @@ Differential privacy (DP) offers a provable and quantifiable amount of privacy p
 In this section, we reproduce the pertinent definitions and theorems of DP with the following notation: $X\in\mathbb{R}$ is the original dataset  with dimension ${n\times r}$ and $X^*$ is the private version of $X$ with dimension ${n^*\times r}$. We also define a statistical query as a function $u:\mathbb{R}^{n\times r}\rightarrow\mathbb{R}^k$, where the function maps the possible datasets of $X$ to $k$ real numbers.
 
 \subsubsection{Definitions and Theorems}\label{subsec:def}
-\begin{defn}\label{def:dp} \textbf{Differential privacy} \citep{dwork2006calibrating}:
-A sanitization algorithm, $\M$, satisfies $\epsilon$-DP if for all subsets $S\subseteq Range(\M)$ and for all $X,X'$ such that $d(X,X')=1$, 
-    \begin{equation}\label{eqn:dp}
-        \frac{\Pr(\M( X) \in S)}{ \Pr(\M( X')\in S)}\le \exp(\epsilon)
-    \end{equation}
+\begin{defn}\label{def:dp}
+    \textbf{Differential Privacy} \citep{dwork2006calibrating}:
+    A sanitization algorithm, $\M$, satisfies $\epsilon$-DP if for all subsets $S\subseteq Range(\M)$ and for all $X,X'$ such that $d(X,X')=1$, 
+        \begin{equation}\label{eqn:dp}
+            \frac{\Pr(\M( X) \in S)}{ \Pr(\M( X')\in S)}\le \exp(\epsilon)
+        \end{equation}
     \noindent where $\epsilon>0$ is the privacy loss budget and $d(X,X')=1$ represents the possible ways that $X'$ differs from $X$ by one record.
 \end{defn}
+\vspace{-8pt}
+Definition \ref{def:dp} provides what is known as $\epsilon$-DP. There are varying understandings of what it means to differ by one record. One interpretation is the presence or absence of a record, and the other has the difference as a change, where $X$ and $X'$ have the same dimensions. \citet{li2016differential} refers to these interpretations as \textit{unbounded DP} for addition or removal of a record and \textit{bounded DP} for the change of a record. They prove that unbounded DP satisfies an important composition theorem we will discuss later in this section (see Theorem \ref{thm:comp}), whereas bounded DP does not. Because many DP methods rely on Theorem \ref{thm:comp}, we assume unbounded DP in this paper.
 
-Privacy researchers debate what this difference means. One interpretation is the presence or absence of a record, and the other has the difference as a change, where $X$ and $X'$ have the same dimensions. \citet{li2016differential} refers to these interpretations as \textit{unbounded DP} for addition or removal of a record and \textit{bounded DP} for the change of a record. They prove that unbounded DP satisfies an important composition theorem we will discuss later in this section (theorem \ref{thm:comp}), whereas bounded DP does not. Because many differentially private methods rely on theorem \ref{thm:comp}, we use unbounded DP in our report.
+Several relaxations of $\epsilon$-DP have been developed in order to inject less noise into the output, such as approximate DP \citep{dwork2006our}, probabilistic DP \citep{machanavajjhala2008privacy}, concentrated DP \citep{dwork2016concentrated}, R\'enyi differential privacy \citep{mironov2017renyi}, and zero-concentrated DP \citep{bun2016concentrated}. Though these definitions are still formally private, they offer slightly weaker privacy guarantees. In return, they typically lessen the amount of noise required. We will cover approximate DP, also known as $(\epsilon, \delta)$-DP, and zero-concentrated DP in depth, because most of the methods we test in our study use one of these two definitions.
 
-Data users often criticize that $\epsilon$-DP algorithms inject too much noise into query results. Several relaxations of $\epsilon$-DP have been developed, such as approximate DP \citep{dwork2006our}, probabilistic DP \citep{machanavajjhala2008privacy}, concentrated DP \citep{dwork2016concentrated}, R\'enyi differential privacy \citep{mironov2017renyi}, and zero-concentrated DP \citep{bun2016concentrated}. Though these definitions are still formally private, they offer slightly weaker privacy guarantees. In return, they typically lessen the amount of noise required. We will cover approximate DP, also known as $(\epsilon, \delta)$-DP, R\'enyi differential privacy, and zero-concentrated in depth, because the methods we test in our study use these definitions.
-
-\begin{defn}\label{def:adp} \textbf{$(\epsilon, \delta)$-Differential privacy} \citep{dwork2006our}:
+\begin{defn}\label{def:adp} \textbf{$(\epsilon, \delta)$-Differential Privacy} \citep{dwork2006our}:
 A sanitization algorithm, $\M$, satisfies $(\epsilon, \delta)$-DP if for all $X, X'$ that are $d(X,X')=1$,
     \begin{equation}\label{eqn:adp}
         \Pr(\M( X) \in S)\le \exp(\epsilon) \Pr(\M( X')\in S) + \delta
     \end{equation}
     where $\delta\in [0,1]$. $\epsilon$-DP is a special case of $(\epsilon, \delta)$-DP when $\delta=0$.
 \end{defn}
+\vspace{-8pt}
+Definition \ref{def:adp} provides a simple relaxation of Definition \ref{def:dp} by adding the parameter $\delta$. This allows, with small probability, that the strict bound given does not hold, which can be useful when dealing with extreme yet very unlikely cases.
 
-The parameter $\delta$ adds a small probability that the bound given in definition \ref{def:dp} does not hold, which can be useful when dealing with extreme yet very unlikely cases.
+\cite{dwork2016concentrated} proposed concentrated DP, which aimed to reduce the privacy loss over multiple computations (more on composition of multiple queries soon when discussing Theorem \ref{thm:comp}).
 
-In 2016, \citet{dwork2016concentrated} created concentrated DP (CDP), which aimed to reduce the privacy loss over multiple computations (see more on composition of multiple queries following theorem \ref{thm:comp}).
+This definition of privacy was later on improved by
+\cite{bun2016concentrated} who introduced zero-concentrated DP (zCDP or $\rho$-zCDP), given in Definition \ref{def:scdp}. 
+They also show in their Proposition 1.3 that if $M$ satisfies $\rho$-zCDP, then $M$ is $(\rho+2\sqrt{\rho\log(1/\delta)},\delta)$-DP for any $\delta>0$. For the other direction, their Proposition 1.4 states that if $M$ satisfies $\epsilon$-DP, then $M$ satisfies $(1/2\epsilon^2)$-zCDP, which allows us to relate $\rho$-zCDP algorithms to an $\epsilon$-DP equivalent.
 
-\begin{defn}\label{def:cdp} \textbf{Concentrated differential privacy} \citep{dwork2016concentrated}:
-For all datasets $(\x,\x')$ that is $d(\x,\x')=1$, a sanitization algorithm $\R$ gives $(\mu, \tau)$-concentrated differential privacy if 
-\begin{equation}
-    D_{\text{subG}}(\R(\x)||\R(\x')) \preceq (\mu,\tau),
-\end{equation}
-where $D_{\text{subG}}$ stands for \emph{subGaussian divergence}. SubGaussian divergence is two random variables $Y$ and $Z$ are $D_{\text{subG}}(Y||Z) \preceq (\mu,\tau)$ if and only if  $\mathbb{E}(L_{Y||Z})\leq \mu$ and the centered distribution of $(L_{Y||Z}-\mathbb{E}(L_{Y||Z})$ is defined and $\tau$-subgaussian, where  $L_{(Y||Z)}=\ln\left(p(Y) /p(Z) \right)$ is the privacy loss random variable.
-\end{defn}
-
-\citet{bun2016concentrated} extended concentrated DP with zero-concentrated DP (zCDP).
-
-\begin{defn}\label{def:scdp} \textbf{Zero-concentrated differential privacy} \citep{bun2016concentrated}:
+\begin{defn}\label{def:scdp} \textbf{Zero-Concentrated Differential Privacy} \citep{bun2016concentrated}:
 A sanitization algorithm, $\M$, satisfies $(\xi, \rho)$-zero-concentrated differential privacy if for all $X, X'$ that are $d(X,X')=1$ and $\alpha\in (1, \infty)$,
     \begin{equation}
-        D_\alpha(M(X)||\M(X')\leq\xi+\rho\alpha,
+        D_\alpha(\M(X)||\M(X'))\leq\xi+\rho\alpha,
     \end{equation}
-    where $D_\alpha(M(X)||\M(X')$ is the $\alpha$-R\'enyi divergence (see definition \ref{def:divergence}) between the distribution of $M(X)$ and the distribution of $M(X').$
+    where $D_\alpha(\M(X)||\M(X'))$ is the $\alpha$-R\'enyi divergence
+    between the distribution of $\M(X)$ and the distribution of $\M(X')$, $\xi$ and $\rho$ are positive constants, and $\alpha \in (1,\infty)$.
 \end{defn}
-\citet{bun2016concentrated} define $\rho$-zCDP to be $(0,\rho)$-zCDP. They also show in their proposition 1.3 that if $M$ satisfies $\rho$-zCDP, then $M$ is $(\rho+2\sqrt{\rho\log(1/\delta)},\delta)$-DP for any $\delta>0$. For the other direction, their proposition 1.4 states that if $M$ satisfies $\epsilon$-DP, then $M$ satisfies $(1/2\epsilon^2)$-zCDP.
+\vspace{-8pt}
+As mentioned before, many DP algorithms require repeated responses from a query system, such as a validation server. Each time a statistic or output is released, data information ``leaks'' and must be protected. DP protects the information by splitting the amount of $\epsilon$ used for each output, and the composition theorems formalize this concept.
 
-Shortly after, \citet{mironov2017renyi} introduced the idea of DP based on the concept of R\'enyi Divergence. The paper defines R\'enyi Divergence (definition \ref{def:divergence}) and R\'enyi DP (definition \ref{def:renyi}) as follows:
-
-\begin{defn}\label{def:divergence} \textbf{R\'enyi Divergence} \citep{renyi1961measures}: Let $P$ and $Q$ be two distributions on $X$ defined over the same probability space, and let $p$ and $q$ be their respective densities. The R\'enyi Divergence of a finite order $\alpha\neq1$ between $P$ and $Q$ is defined as
-    \begin{equation}
-        D_\alpha(P||Q)\stackrel{\Delta}{=}\frac{1}{\alpha-1}\ln\int_X q(x)\left(\frac{p(x)}{q(x)}\right)^\alpha dx
-    \end{equation}
-\end{defn}
-
-\begin{defn}\label{def:renyi} \textbf{$(\alpha, \epsilon)$-Differential privacy} \citep{mironov2017renyi}: A sanitization algorithm, $\M$, satisfies $(\alpha, \epsilon)$-DP if for all $X, X'$ that are $d(X,X')=1$,
-    \begin{equation}
-        D_\alpha(M(X)||\M(X')\leq\epsilon
-    \end{equation}
-\end{defn}
-
-Additionally, \citet{mironov2017renyi} showed that if $\M$ satisfies $(\alpha,\epsilon)$-DP, then it satisfies $\left(\epsilon + \frac{\log(1/\delta)}{\alpha-1}, \delta \right)$-DP for all $\delta\in[0,1]$.
-
-Many DP algorithms require repeated responses from a query system, such as a validation server. Each time a statistic or output is released, data information ``leaks'' and must be protected. DP protects the information by splitting the amount of $\epsilon$ used for each output, and the composition theorems formalize this concept.
-
-\begin{thm}\label{thm:comp} \textbf{Composition theorems} \citep{mcsherry2009privacy,dwork2016concentrated,bun2016concentrated}:
-Suppose a mechanism, $\M$, provides $(\epsilon_j$, $\delta_j)$-DP for $j=1,\ldots,k$.
+\begin{thm}\label{thm:comp} \textbf{Composition Theorems} \citep{mcsherry2009privacy,dwork2016concentrated,bun2016concentrated}:
+Suppose a mechanism, $\M_j$, provides $(\epsilon_j$, $\delta_j)$-DP or $(\xi_j,\rho_j)$-zCDP for $j=1,\ldots,J$.
   \begin{itemize}\setlength{\itemindent}{15pt}
-  \item[a)] \textbf{Sequential composition:}\\
-    The sequence of $\M_j(X)$ applied on the same $X$ provides $(\sum_j\epsilon_j,\sum_j\delta_j)$-DP or $(\sum_j\xi_j,\sum_j\rho_j)$-zCDP.
-  \item[b)] \textbf{Parallel composition:}\\
-    Let  $D_j$ be disjoint subsets of the input domain $D$. The sequence of $\M_j(X\cap D_j)$ provides $\max(\epsilon_j), \max(\delta_j)$-DP or $\max(\xi_j), \max(\rho_j)$-zCDP.
+  \item[a)] \textbf{Sequential Composition:} The sequence of $\M_j(X)$ applied on the same $X$ provides $(\sum_{j=1}^J\epsilon_j,\sum_{j=1}^J\delta_j)$-DP or $(\sum_{j=1}^J\xi_j,\sum_{j=1}^J\rho_j)$-zCDP.
+  \item[b)] \textbf{Parallel Composition:} Let  $D_j$ be disjoint subsets of the input domain $D$. The sequence of $\M_j(X\cap D_j)$ provides $(\max_{j \in \{1,\ldots,J\}} \epsilon_j, \max_{j \in \{1,\ldots,J\}} \delta_j)$-DP or \\ $(\max_{j \in \{1,\ldots,J\}}\xi_j, \max_{j \in \{1,\ldots,J\}}\rho_j)$-zCDP.
   \end{itemize}
 \end{thm}
+\vspace{-8pt}
+More simply, suppose there are $J$ many statistical queries on $X$. The composition theorems state that we may allocate a portion of the overall desired level of $\epsilon$ to each statistic by sequential composition. A typical appropriation is dividing $\epsilon$ equally by $J$. For example, a data practitioner might want to query the mean and standard deviation of a variable. These two queries will require using the sequential composition, allocating an equal amount of privacy budget to each query. Conversely, parallel composition does not require splitting the budget because the noise is applied to disjoint subsets of the input domain. Privacy experts will often leverage parallel composition, for instance, to sanitize histogram counts, where the bins are disjoint subsets of the data. In this example, noise can be added to each bin independently without needing to split $\epsilon$.
 
-More simply, suppose there are $k$ many statistical queries on $X$. The composition theorems state that the data practitioner may allocate a portion of the overall desired level of $\epsilon$ to each statistic by sequential composition. A typical appropriation is dividing $\epsilon$ equally by $k$. For example, a data practitioner might want to query the mean and standard deviation of a variable. These two queries will require using the sequential composition, allocating an equal amount of privacy budget to each query.
+The post-processing theorem is another important theorem, which states that any function applied to a DP output also satisfies DP. Many DP methods use the post-processing theorem to correct any inconsistencies or values that are not possible and to compute additional summaries required to perform statistical inference.
 
-Conversely, parallel composition does not require splitting the budget because the noise is applied to disjoint subsets of the input domain. Privacy experts will often leverage parallel composition, for instance, to sanitize histogram counts, where the bins are disjoint subsets of the data. In this example, noise can be added to each bin independently without needing to split $\epsilon$.
-
-The postprocessing theorem is another important theorem, which states that any function applied to a differentially private output is also differentially private.
-
-\begin{thm}\label{thm:post} \textbf{Postprocessing theorem} \citep{dwork2006calibrating,nissim2007smooth, bun2016concentrated}:
-If $\M$ be a mechanism that satisfies $\epsilon$-DP, $(\epsilon,\delta)$-DP, or $(\xi,\rho)$-zCDP, and $g$ be any function, then $g\left(\M(X)\right)$ also satisfies $\epsilon$-DP, $(\epsilon,\delta)$-DP, or $(\xi,\rho)$-zCDP.
+\begin{thm}\label{thm:post} \textbf{Post-Processing Theorem} \citep{dwork2006calibrating,nissim2007smooth, bun2016concentrated}:
+If $\M$ be a mechanism that satisfies $(\epsilon,\delta)$-DP or $(\xi,\rho)$-zCDP, and $g$ be any function, then $g\left(\M(X)\right)$ also satisfies $(\epsilon,\delta)$-DP or $(\xi,\rho)$-zCDP.
 \end{thm}
 
-Most differentially private methods use the postprocessing theorem to correct any inconsistencies or values that are not possible. Privacy researchers frequently implement postprocessing to enforce structural aspects of the data, such as not releasing negative values for people's ages.
-
 \subsubsection{Differentially Private Mechanisms}\label{subsec:mech}
-In this section, we present the fundamental mechanisms we tested that satisfy $\epsilon$-DP and $(\epsilon, \delta)$-DP algorithms. For a given value of $\epsilon$, an algorithm that satisfies DP or approximate DP will adjust the amount of noise added to a published statistic or dataset based on the maximum possible change between two databases that differ by one row. This value is commonly referred to as the global sensitivity (GS), given in definition \ref{def:gs}.
-
-\begin{defn}\label{def:gs} \textbf{$l_1$-Global sensitivity} \citep{dwork2006calibrating}:
-For all $X,X'$ such that $d(X,X')=1$, the global sensitivity of a function $u$ is
+In this section, we present two of the fundamental mechanisms we consider that satisfy $\epsilon$-DP and $(\epsilon, \delta)$-DP. We employ additional mechanisms that will be discussed in Section \ref{sec:DPalgorithforTax}. For a given value of $\epsilon$ and $\delta$, an algorithm that satisfies DP or approximate DP will adjust the amount of noise added to the output based on the maximum possible change between two databases that differ by one row. This value is commonly referred to as the global sensitivity (GS), given in Definition \ref{def:gs}.
+\begin{defn}\label{def:gs} \textbf{$l_1$-Global Sensitivity} \citep{dwork2006calibrating}:
+For all $X,X'$ such that $d(X,X')=1$, the global sensitivity of a function $M$ is
     \begin{equation}\label{eqn:gs}
-        \Delta_1 u= \underset{d(X,X')=1}{\text{sup}} \|u(X)-u(X') \|_1 
+        \Delta_1 (M)= \underset{d(X,X')=1}{\text{sup}} \|M(X)-M(X') \|_1 
     \end{equation}
 \end{defn}
+\vspace{-8pt}
+We can calculate sensitivity under different norms. For instance, $\Delta_2(M)$ represents the $l_2$ norm GS, $l_2$-GS, of the function $M$. Another way of thinking about the GS is that it measures the statistical query's robustness to outliers. Though the definition is straightforward, calculating the GS can often be difficult. For instance, we cannot directly calculate an upper bound for the GS of one of the most common statistical analyses, regression, where the coefficients are unbounded. To address this issue, privacy researchers had to be creative in figuring out how to add noise to regression analyses.
 
-We can calculate sensitivity under different norms. For instance, $\Delta_2 u$ represents the $l_2$ norm global sensitivity, $l_2$-GS, of the function $u$. Another way of thinking about the GS is that it measures the statistical query's robustness to outliers.
-
-Though the definition is straightforward, calculating the global sensitivity can often be difficult, if not impossible. For instance, we cannot calculate a finite global sensitivity for unbounded statistics, such as the sample mean or regression coefficients, two of the most common statistical analyses. To address this issue, privacy researchers had to be creative in figuring out how to add noise to regression analyses, either by redefining the output to be bounded or by assuming a priori bounds on the output.
-
-The most basic mechanism satisfying $\epsilon$-DP is the Laplace mechanism, given in definition \ref{def:lap}, first introduced by \citet{dwork2006calibrating}.
-
+The most basic mechanism satisfying $\epsilon$-DP is the Laplace mechanism, given in Definition \ref{def:lap}, and was first introduced by \cite{dwork2006calibrating}. Another popular mechanism is the Gaussian mechanism that satisfies $(\epsilon, \delta)$-DP, given in Definition \ref{def:gauss}, which uses the $l_2$-GS of the statistical query.
 \begin{defn}\textbf{Laplace mechanism} \citep{dwork2006calibrating}: \label{def:lap}
-The Laplace mechanism satisfies $\epsilon$-DP by adding noise to $u$ that are drawn from a Laplace distribution with the location parameter at 0 and scale parameter of $\Delta_u\epsilon^{-1}$ such that 
+The Laplace mechanism satisfies $\epsilon$-DP by adding noise  $(\eta_1,\ldots,\eta_k)$ to $M$ that are independently drawn from a Laplace distribution with the location parameter at 0 and scale parameter of $\Delta_1(M)\epsilon^{-1}$ such that 
     \begin{equation}\label{eqn:lap}
-        u^\ast(X)=u(X)+Laplace\left(0,\Delta_1 u \epsilon^{-1}\right)
+        \M(X)=M(X)+(\eta_1,\ldots,\eta_k).
     \end{equation}
 \end{defn}
-
-Another popular mechanism is the Gaussian mechanism that satisfies $(\epsilon, \delta)$-DP, given in definition \ref{def:gauss}, which uses the $l_2$-GS of the statistical query.
-
+\vspace{-8pt}
 \begin{defn}\label{def:gauss} \textbf{Gaussian mechanism} \citep{dwork2014algorithmic}:
     The Gaussian mechanism satisfies $(\epsilon,\delta)$-DP by adding Gaussian noise with zero mean and variance, $\sigma^2$, such that
         \begin{equation}\label{eqn:gauss}
-            u^\ast(X)=u(X)+N\left(0, \sigma^2 I \right)
+            \M(X)=M(X)+(\eta_1,\ldots,\eta_k)
         \end{equation}
-    where $\sigma=\Delta_2 u \epsilon^{-1} \sqrt{2 \log(1.25/\delta)}$. 
+    where $\eta_1,\ldots,\eta_k$ are independently drawn and $\sigma=\Delta_2(M)\epsilon^{-1} \sqrt{2 \log(1.25/\delta)}$. 
 \end{defn}
+\vspace{-8pt}
+Although \cite{dwork2014algorithmic} proposed Gaussian mechanism for $(\epsilon,\delta)$-DP, the Gaussian mechanism satisfies $((\Delta_2(M))^2/2\sigma^2)$-zCDP, per Proposition 1.6 from \cite{bun2016concentrated}. Additionally, if the $l_2$-GS is 1 (which is true for all counting queries), then the Gaussian mechanism satisfies $\left(\alpha, \frac{\alpha}{2\sigma^2}\right)$-R\'enyi DP, per Corollary 3 from  \cite{mironov2017renyi}. We use this relationship for multiple counting queries to reduce the amount of noise being added from the Gaussian mechanism. 
 
-Although \citet{dwork2014algorithmic} proposed Gaussian mechanism for $(\epsilon,\delta)$-DP, the Gaussian mechanism satisfies $(\Delta^2_2/2\sigma^2)$-zCDP, per proposition 1.6 from \citet{bun2016concentrated}. Additionally, if the $l_2$-GS is 1 (which is true for all counting queries), then the Gaussian mechanism satisfies $\left(\alpha, \frac{\alpha}{2\sigma^2}\right)$-R\'enyi DP, per corollary 3 from  \citet{mironov2017renyi}. Privacy researchers use this relationship for multiple counting queries to reduce the amount of noise added from the Gaussian mechanism. More specifically, $\left(\alpha, \frac{m\alpha}{2\sigma^2}\right)$-R\'enyi DP is equivalent to $\left(m\frac{\alpha}{2\sigma^2}+\frac{\log(1/\delta)}{\alpha-1}, \delta\right)$-DP \citep{mironov2017renyi,wang2019subsampled}.
+Both the Laplace and Gaussian mechanisms are simple and quick to implement, but they apply only to numerical values (without additional post-processing, Theorem \ref{thm:post}). A more general $\epsilon$-DP mechanism is the Exponential mechanism, given in Definition \ref{def:exp}, which allows for the sampling of values from a noisy distribution rather than adding noise directly. 
 
-Both the Laplace and Gaussian mechanisms are simple and quick to implement, but they apply only to numerical values (without additional postprocessing, theorem \ref{thm:post}). A more general $\epsilon$-DP mechanism is the exponential mechanism, given in definition \ref{def:exp}, which allows for the sampling of values from a noisy distribution rather than adding noise directly. Although the Exponential mechanism can apply to any type of statistic, many theoretical algorithms using the Exponential mechanism are computationally infeasible for practical applications without modifications, such as limiting the possible outputs for a particular statistic, $\theta$, on $X$.
-
-\begin{defn}\label{def:exp} \textbf{Exponential mechanism} \citep{mcsherry2007mechanism}:
-    The Exponential mechanism releases values with a probability proportional to
-        \begin{equation}\label{eqn:exp}
-            \exp \left(\frac{\epsilon u(X, \theta)}{2\Delta_1 u}\right)
-        \end{equation}
-    and satisfies $\epsilon$-DP, where $u(X,\theta)$ is the score or quality function that determines the values for each possible output, $\theta$, on $X$.
-\end{defn}
-
+ \begin{defn}\label{def:exp} \textbf{Exponential mechanism} \citep{mcsherry2007mechanism}:
+     The Exponential mechanism releases values with a probability proportional to
+         \begin{equation}\label{eqn:exp}
+             \exp \left(\frac{\epsilon u(X, \theta)}{2\Delta_1(u)}\right)
+         \end{equation}
+     and satisfies $\epsilon$-DP, where $u(X,\theta)$ is the score or quality function that determines the values for each possible output, $\theta$, on $X$.
+ \end{defn}
+\vspace{-8pt}
 \subsubsection{Determining the Privacy Loss Parameters}
 The mechanisms reviewed provide levels of privacy protection determined by the value of privacy parameters, such as $\epsilon, \delta$, or $\rho$. For a validation server, the relative merits and interpretations for chosen values of these parameters would need to be understood and communicated to policymakers. It is also important to understand that when considering the total privacy loss budget, choosing the value of $\epsilon$ for any single query is sensitive to other factors, such as the sample size, the total number of desired queries, and the size of the population from which data are sampled (if sampled). Those questions concern the overall framework that would need to be created for a fully implemented validation server, and we do not seek to answer those questions at this stage.
 
